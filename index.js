@@ -48,9 +48,10 @@ app.post('/webhook/', function (req, res) {
             }
             else if (text === 'diminished' | text === 'moderate' | text === 'elevated'){
                 sendGenericMessage(sender)
-            }
+            } else {
             //sendTextMessage(sender, "Text received, echo: " + text.substring(0, 200))
             sendTextMessage(sender, full_text)
+            }
         }
     }
     res.sendStatus(200)
