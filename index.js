@@ -39,8 +39,8 @@ app.post('/webhook/', function (req, res) {
         let sender = event.sender.id
         if (event.message && event.message.text) {
             let text = event.message.text
-            let full_text = "What color wine would you like?" //"Text received, echo: " + text.substring(0, 200) + " https://shopbanquet.com/flatironsf/products/failla-sonoma-coast-pinot-noir-2013/5769c5cdfc0cb306000713e9"
-            if (text === 'Red') {
+            let full_text = "What color wine would you like? (Rose is coming soon)" //"Text received, echo: " + text.substring(0, 200) + " https://shopbanquet.com/flatironsf/products/failla-keefer-ranch-pinot-noir-2013/56e7143f348e4706008d6027"
+            if (text === 'Red' | text === 'White') {
                 sendGenericMessage(sender)
                 continue
             }
@@ -57,7 +57,7 @@ const token = "EAAQEo9OiEDwBAJwqZCe5bZAu4XeY6kcIl1T6oVbLboPKjiyEzfbRwngzarbYTFjs
 function sendTextMessage(sender, text) {
     let messageData = { 
             text:text,
-            quick_replies: makeQuickReplies(["Red","White"])
+            quick_replies: makeQuickReplies(["Red","White","Rose"])
     }
     request({
         url: 'https://graph.facebook.com/v2.6/me/messages',
@@ -82,12 +82,12 @@ function sendGenericMessage(sender) {
             "payload": {
                 "template_type": "generic",
                 "elements": [{
-                    "title": "2013 Failla Pinot",
+                    "title": "2013 Failla Keefer Ranch Pinot",
                     "subtitle": "Sonoma Coast, CA",
-                    "image_url": "https://d2mvsg0ph94s7h.cloudfront.net/aymerik-renard-1426209937-0aab41287817_medium.jpg",
+                    "image_url": "https://d2mvsg0ph94s7h.cloudfront.net/tylerhensley-1458790842-917b41241d63_medium.jpg",
                     "buttons": [{
                         "type": "web_url",
-                        "url": "https://shopbanquet.com/flatironsf/products/failla-sonoma-coast-pinot-noir-2013/5769c5cdfc0cb306000713e9",
+                        "url": "https://shopbanquet.com/flatironsf/products/failla-keefer-ranch-pinot-noir-2013/56e7143f348e4706008d6027",
                         "title": "Buy $42"
                     }, {
                         "type": "postback",
@@ -137,17 +137,21 @@ function sendGenericMessage(sender) {
 
 
 
-function makeQuickReplies(arrOfLength2){
+function makeQuickReplies(arrOfLength3){
         let quick_replies = 
         [{
             "content_type":"text",
-            "title":arrOfLength2[0],
-            "payload":arrOfLength2[0]
+            "title":arrOfLength3[0],
+            "payload":arrOfLength3[0]
         },{
             "content_type":"text",
-            "title":arrOfLength2[1],
-            "payload":arrOfLength2[1]
+            "title":arrOfLength3[1],
+            "payload":arrOfLength3[1]
 
+        },{
+            "content_type":"text",
+            "title":arrOfLength3[2],
+            "payload":arrOfLength3[2]
         }]
         return quick_replies
 }
