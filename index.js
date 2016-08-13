@@ -88,7 +88,7 @@ function sendGenericMessage(sender) {
                     "buttons": [{
                         "type": "web_url",
                         "url": "https://shopbanquet.com/flatironsf/products/failla-keefer-ranch-pinot-noir-2013/56e7143f348e4706008d6027",
-                        "title": "Buy $42"
+                        "title": "Get it in 1 hr $42"
                     }, {
                         "type": "postback",
                         "title": "More like this",
@@ -101,7 +101,7 @@ function sendGenericMessage(sender) {
                     "buttons": [{
                         "type": "web_url",
                         "url": "https://shopbanquet.com/flatironsf/products/la-viarte-colli-orientali-del-friuli-pinot-grigio-2014/56ea0d784ecf7206001ace5f",
-                        "title": "Buy $19"
+                        "title": "Get it in 1 hr $19"
                     },{
                         "type": "postback",
                         "title": "More like this",
