@@ -83,5 +83,4 @@ function makeQuickReplies(){
 
         }]
         return quick_replies
-    }
 }
