@@ -38,7 +38,10 @@ app.post('/webhook/', function (req, res) {
         let sender = event.sender.id
         if (event.message && event.message.text) {
             let text = event.message.text
-            sendTextMessage(sender,"Text received, echo: " + text.substring(0, 200) + " https://shopbanquet.com/flatironsf/products/failla-sonoma-coast-pinot-noir-2013/5769c5cdfc0cb306000713e9")
+            let full_text = "Text received, echo: " + text.substring(0, 200) + " https://shopbanquet.com/flatironsf/products/failla-sonoma-coast-pinot-noir-2013/5769c5cdfc0cb306000713e9"
+            let quick_replies = makeQuickReplies()
+            let attachment = makeAttachment()
+            sendTextMessage(sender,full_text,quick_replies,attachment)
         }
     }
     res.sendStatus(200)
@@ -46,12 +49,13 @@ app.post('/webhook/', function (req, res) {
 
 
 
+
 const token = "EAAQEo9OiEDwBAJwqZCe5bZAu4XeY6kcIl1T6oVbLboPKjiyEzfbRwngzarbYTFjsd0bzXEQGn2zYI7dlvlJjRqxf9Wnco4RkAApFCGc8ymMnpzCvZBehEv7w98i0DvEY6pYvfVF54A2ZA1UcOZCNv8WNnjQRYb09tCvBArlLVAwZDZD"
 
-function sendTextMessage(sender, text) {
-    let messageData = { text:text}
+function sendTextMessage(sender, text, quick_replies, attachment) {
+    let messageData = { text:text, quick_replies:quick_replies, attachment:attachment}
     request({
-        url: 'https://graph.facebook.com/v2.6/me/messages',
+        url: 'http://bfdkzapiky.localtunnel.me'//'https://graph.facebook.com/v2.6/me/messages',
         qs: {access_token:token},
         method: 'POST',
         json: {
@@ -66,3 +70,28 @@ function sendTextMessage(sender, text) {
         }
     })
 }
+
+function makeQuickReplies(){
+        quick_replies = 
+        [{
+            "content_type":"text",
+            "title":"Red",
+            "payload":"Red"
+        },{
+            "content_type":"text",
+            "title":"White",
+            "payload":"White"
+
+        }]
+        return quick_replies
+    }
+}
+function makeAttachment(){
+    attachment = {
+      "type":"image",
+      "payload":{
+        "url":"https://d2mvsg0ph94s7h.cloudfront.net/aymerik-renard-1426209937-0aab41287817_medium.jpg"
+      }
+    return attachment
+}
+
