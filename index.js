@@ -70,17 +70,17 @@ function sendTextMessage(sender, text) {
         }
     })
 }
-function makeQuickReplies(textArray){
-    let quick_replies = []
-    for (let ij=0, ij < textArray.length; ij++){
-        quickReply = {
+function makeQuickReplies(arrOfLength2){
+        let quick_replies = 
+        [{
             "content_type":"text",
-            "title":textArray[ij],
-            "payload":textArray[ij]
-        }
-        quick_replies.push(quickReply)
-    }
-    return quick_replies
+            "title":arrOfLength2[0],
+            "payload":arrOfLength2[0]
+        },{
+            "content_type":"text",
+            "title":arrOfLength2[1],
+            "payload":arrOfLength2[1]
+
+        }]
+        return quick_replies
 }
-
-
