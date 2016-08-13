@@ -40,7 +40,7 @@ app.post('/webhook/', function (req, res) {
         if (event.message && event.message.text) {
             let text = event.message.text
             let full_text = "What color is the wine?" //"Text received, echo: " + text.substring(0, 200) + " https://shopbanquet.com/flatironsf/products/failla-keefer-ranch-pinot-noir-2013/56e7143f348e4706008d6027"
-            if (text === 'Red'){sendTextMessage(sender,'Sorry, I haven\'t learned red wines yet.')}
+            if (text === 'Red'| text === 'Rose'){sendTextMessage(sender,'Sorry, I haven\'t learned red wines yet.')}
             else if (text === 'White') {
                 //let attributes = {}
                 sendTernaryAttributeMessage(sender,'What\'s the color concentration?')
