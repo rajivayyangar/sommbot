@@ -81,23 +81,27 @@ function sendGenericMessage(sender) {
             "payload": {
                 "template_type": "generic",
                 "elements": [{
-                    "title": "First card",
-                    "subtitle": "Element #1 of an hscroll",
-                    "image_url": "http://messengerdemo.parseapp.com/img/rift.png",
+                    "title": "2013 Failla Pinot",
+                    "subtitle": "Sonoma Coast, CA",
+                    "image_url": "https://d2mvsg0ph94s7h.cloudfront.net/aymerik-renard-1426209937-0aab41287817_medium.jpg",
                     "buttons": [{
                         "type": "web_url",
-                        "url": "https://www.messenger.com",
-                        "title": "web url"
+                        "url": "https://shopbanquet.com/flatironsf/products/failla-sonoma-coast-pinot-noir-2013/5769c5cdfc0cb306000713e9",
+                        "title": "Buy $42"
                     }, {
                         "type": "postback",
                         "title": "Postback",
                         "payload": "Payload for first element in a generic bubble",
                     }],
                 }, {
-                    "title": "Second card",
-                    "subtitle": "Element #2 of an hscroll",
-                    "image_url": "http://messengerdemo.parseapp.com/img/gearvr.png",
+                    "title": "2014 La Viarte Pinot Grigio",
+                    "subtitle": "Friuli, Italy",
+                    "image_url": "https://d2mvsg0ph94s7h.cloudfront.net/jeffsidwell-1449253546-90f4ef3fc350_medium.jpg",
                     "buttons": [{
+                        "type": "web_url",
+                        "url": "https://shopbanquet.com/flatironsf/products/la-viarte-colli-orientali-del-friuli-pinot-grigio-2014/56ea0d784ecf7206001ace5f",
+                        "title": "Buy $19"
+                    },{
                         "type": "postback",
                         "title": "Postback",
                         "payload": "Payload for second element in a generic bubble",
