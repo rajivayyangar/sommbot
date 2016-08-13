@@ -49,7 +49,19 @@ app.post('/webhook/', function (req, res) {
 const token = "EAAQEo9OiEDwBAJwqZCe5bZAu4XeY6kcIl1T6oVbLboPKjiyEzfbRwngzarbYTFjsd0bzXEQGn2zYI7dlvlJjRqxf9Wnco4RkAApFCGc8ymMnpzCvZBehEv7w98i0DvEY6pYvfVF54A2ZA1UcOZCNv8WNnjQRYb09tCvBArlLVAwZDZD"
 
 function sendTextMessage(sender, text) {
-    let messageData = { text:text}
+    let messageData = { 
+            text:text,
+            quick_replies: [{
+                                "content_type":"text",
+                                "title":"Red",
+                                "payload":"Red"
+                            },{
+                                "content_type":"text",
+                                "title":"White",
+                                "payload":"White"
+
+                            }]
+    }
     request({
         url: 'https://graph.facebook.com/v2.6/me/messages',
         qs: {access_token:token},
