@@ -52,7 +52,7 @@ const token = "EAAQEo9OiEDwBAJwqZCe5bZAu4XeY6kcIl1T6oVbLboPKjiyEzfbRwngzarbYTFjs
 function sendTextMessage(sender, text) {
     let messageData = { 
             text:text,
-            quick_replies: makeQuickReplies()
+            quick_replies: makeQuickReplies(["Red","White"])
     }
     request({
         url: 'https://graph.facebook.com/v2.6/me/messages',
@@ -70,16 +70,16 @@ function sendTextMessage(sender, text) {
         }
     })
 }
-function makeQuickReplies(){
+function makeQuickReplies(arrOfLength2){
         let quick_replies = 
         [{
             "content_type":"text",
-            "title":"Red",
-            "payload":"Red"
+            "title":arrOfLength2[0],
+            "payload":arrOfLength2[0]
         },{
             "content_type":"text",
-            "title":"White",
-            "payload":"White"
+            "title":arrOfLength2[1],
+            "payload":arrOfLength2[1]
 
         }]
         return quick_replies
