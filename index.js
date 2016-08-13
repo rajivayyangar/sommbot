@@ -71,7 +71,7 @@ function sendTextMessage(sender, text) {
     })
 }
 function makeQuickReplies(){
-        quick_replies = 
+        let quick_replies = 
         [{
             "content_type":"text",
             "title":"Red",
