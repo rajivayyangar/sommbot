@@ -69,7 +69,7 @@ function sendTextMessage(sender, text) {
 
 function makeQuickReplies(textArray){
     let QRarray = []
-    for (let i=0, i < textArray.length; i++){
+    for (let j=0, j < textArray.length; j++){
         quickReply = {
             "content_type":"text",
             "title":textArray[i],
