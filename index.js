@@ -40,8 +40,8 @@ app.post('/webhook/', function (req, res) {
             let text = event.message.text
             sendTextMessage(
                 sender, 
-                "Text received, echo: " + text.substring(0, 200) + " https://shopbanquet.com/flatironsf/products/failla-sonoma-coast-pinot-noir-2013/5769c5cdfc0cb306000713e9",
-                makeQuickReplies(["Light","Medium","Full"])
+                "Text received, echo: " + text.substring(0, 200) + " https://shopbanquet.com/flatironsf/products/failla-sonoma-coast-pinot-noir-2013/5769c5cdfc0cb306000713e9"
+                //,makeQuickReplies(["Light","Medium","Full"])
             )
         }
     }
@@ -52,8 +52,8 @@ app.post('/webhook/', function (req, res) {
 
 const token = "EAAQEo9OiEDwBAJwqZCe5bZAu4XeY6kcIl1T6oVbLboPKjiyEzfbRwngzarbYTFjsd0bzXEQGn2zYI7dlvlJjRqxf9Wnco4RkAApFCGc8ymMnpzCvZBehEv7w98i0DvEY6pYvfVF54A2ZA1UcOZCNv8WNnjQRYb09tCvBArlLVAwZDZD"
 
-function sendTextMessage(sender, text, quick_replies) {
-    let messageData = { text:text, quick_replies:quick_replies}
+function sendTextMessage(sender, text) {
+    let messageData = { text:text}
     request({
         url: 'https://graph.facebook.com/v2.6/me/messages',
         qs: {access_token:token},
