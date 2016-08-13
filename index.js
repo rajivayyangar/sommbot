@@ -66,14 +66,3 @@ function sendTextMessage(sender, text) {
         }
     })
 }
-
-function makeQuickReplies(textArray){
-    let QRarray = []
-    for (let j=0, j < textArray.length; j++){
-        quickReply = {
-            "content_type":"text",
-            "title":textArray[i],
-            "payload":textArray[i]
-        }
-    }
-}
