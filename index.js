@@ -38,7 +38,8 @@ app.post('/webhook/', function (req, res) {
         let sender = event.sender.id
         if (event.message && event.message.text) {
             let text = event.message.text
-            sendTextMessage(sender,"Text received, echo: " + text.substring(0, 200) + " https://shopbanquet.com/flatironsf/products/failla-sonoma-coast-pinot-noir-2013/5769c5cdfc0cb306000713e9")
+            let full_text = "What color wine is it?" //"Text received, echo: " + text.substring(0, 200) + " https://shopbanquet.com/flatironsf/products/failla-sonoma-coast-pinot-noir-2013/5769c5cdfc0cb306000713e9"
+            sendTextMessage(sender,full_text)
         }
     }
     res.sendStatus(200)
