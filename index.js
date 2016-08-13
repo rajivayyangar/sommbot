@@ -91,7 +91,7 @@ function sendGenericMessage(sender) {
                         "title": "Buy $42"
                     }, {
                         "type": "postback",
-                        "title": "Postback",
+                        "title": "More like this",
                         "payload": "Payload for first element in a generic bubble",
                     }],
                 }, {
@@ -104,7 +104,7 @@ function sendGenericMessage(sender) {
                         "title": "Buy $19"
                     },{
                         "type": "postback",
-                        "title": "Postback",
+                        "title": "More like this",
                         "payload": "Payload for second element in a generic bubble",
                     }],
                 }]
