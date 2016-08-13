@@ -39,9 +39,12 @@ app.post('/webhook/', function (req, res) {
         let sender = event.sender.id
         if (event.message && event.message.text) {
             let text = event.message.text
-            let full_text = "What color wine would you like? (Rose is coming soon)" //"Text received, echo: " + text.substring(0, 200) + " https://shopbanquet.com/flatironsf/products/failla-keefer-ranch-pinot-noir-2013/56e7143f348e4706008d6027"
-            if (text === 'Red' | text === 'White') {
-                sendGenericMessage(sender)
+            let full_text = "What color is the wine?" //"Text received, echo: " + text.substring(0, 200) + " https://shopbanquet.com/flatironsf/products/failla-keefer-ranch-pinot-noir-2013/56e7143f348e4706008d6027"
+            if (text === 'Red'){sendTextMessage(sender,'Sorry, I haven\'t learned red wines yet.')}
+            else if (text === 'White') {
+                //let attributes = {}
+                sendTernaryAttributeMessage(sender,'What\'s the color concentration?')
+                //sendGenericMessage(sender)
                 continue
             }
             //sendTextMessage(sender, "Text received, echo: " + text.substring(0, 200))
@@ -53,6 +56,7 @@ app.post('/webhook/', function (req, res) {
 
 
 const token = "EAAQEo9OiEDwBAJwqZCe5bZAu4XeY6kcIl1T6oVbLboPKjiyEzfbRwngzarbYTFjsd0bzXEQGn2zYI7dlvlJjRqxf9Wnco4RkAApFCGc8ymMnpzCvZBehEv7w98i0DvEY6pYvfVF54A2ZA1UcOZCNv8WNnjQRYb09tCvBArlLVAwZDZD"
+
 
 function sendTextMessage(sender, text) {
     let messageData = { 
@@ -75,6 +79,28 @@ function sendTextMessage(sender, text) {
         }
     })
 }
+function sendTernaryAttributeMessage(sender, text) {
+    let messageData = { 
+            text:text,
+            quick_replies: makeQuickReplies(["diminished","moderate","elevated"])
+    }
+    request({
+        url: 'https://graph.facebook.com/v2.6/me/messages',
+        qs: {access_token:token},
+        method: 'POST',
+        json: {
+            recipient: {id:sender},
+            message: messageData,
+        }
+    }, function(error, response, body) {
+        if (error) {
+            console.log('Error sending messages: ', error)
+        } else if (response.body.error) {
+            console.log('Error: ', response.body.error)
+        }
+    })
+}
+
 function sendGenericMessage(sender) {
     let messageData = {
         "attachment": {
