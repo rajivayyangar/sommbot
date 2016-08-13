@@ -44,8 +44,10 @@ app.post('/webhook/', function (req, res) {
             else if (text === 'White') {
                 //let attributes = {}
                 sendTernaryAttributeMessage(sender,'What\'s the color concentration?')
-                //sendGenericMessage(sender)
                 continue
+            }
+            else if (text === 'diminished' | text === 'moderate' | text === 'elevated'){
+                sendGenericMessage(sender)
             }
             //sendTextMessage(sender, "Text received, echo: " + text.substring(0, 200))
             sendTextMessage(sender, full_text)
