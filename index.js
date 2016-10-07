@@ -8,9 +8,9 @@ const app = express()
 app.set('port', (process.env.PORT || 5000))
 
 // Get data from Fieldbook database
-var requestify = require('requestify');
-var bookId = '57f718dd56cec00300626d43';
-var baseUrl = 'https://api.fieldbook.com/v1/' + bookId;
+const requestify = require('requestify');
+const bookId = '57f718dd56cec00300626d43';
+const baseUrl = 'https://api.fieldbook.com/v1/' + bookId;
 //var options = {
 //    headers: {accept: 'application/json'},
 //
