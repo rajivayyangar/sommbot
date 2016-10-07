@@ -5,7 +5,6 @@ const bodyParser = require('body-parser')
 const request = require('request')
 const app = express()
 
-app.set('port', (process.env.PORT || 5000))
 
 // Get data from Fieldbook database
 const requestify = require('requestify');
@@ -28,6 +27,7 @@ const baseUrl = 'https://api.fieldbook.com/v1/' + bookId;
 //responseObject[0].description
 //responseObject[0].url
 
+app.set('port', (process.env.PORT || 5000))
 
 
 // Process application/x-www-form-urlencoded
