@@ -65,7 +65,7 @@ app.post('/webhook/', function (req, res) {
             if (text === 'Red'| text === 'Rose'){sendTextMessage(sender,'Sorry, I only know white wines now.')}
             else if (text === 'White') {
                 //let attributes = {}
-                sendTernaryAttributeMessage(sender,'What\'s the color concentration?'+responseObject[0].description)
+                sendTernaryAttributeMessage(sender,'What\'s the color concentration?')
                 continue
             }
             else if (text === 'diminished' | text === 'moderate' | text === 'elevated'){
