@@ -6,22 +6,23 @@ const request = require('request')
 const app = express()
 
 app.set('port', (process.env.PORT || 5000))
+
 // Get data from Fieldbook database
-var requestify = require('requestify');
-var bookId = '57f718dd56cec00300626d43';
-var baseUrl = 'https://api.fieldbook.com/v1/' + bookId;
-var options = {
-    headers: {accept: 'application/json'},
-
-    auth: {
-        username: process.env.FIELDBOOK_USER,
-        password: process.env.FIELDBOOK_KEY
-    }
-};
-
-var url = baseUrl + '/available_wines';
-var response = await requestify.get(url, options);
-var responseObject = JSON.parse(response.body);
+//var requestify = require('requestify');
+//var bookId = '57f718dd56cec00300626d43';
+//var baseUrl = 'https://api.fieldbook.com/v1/' + bookId;
+//var options = {
+//    headers: {accept: 'application/json'},
+//
+//    auth: {
+//        username: process.env.FIELDBOOK_USER,
+//        password: process.env.FIELDBOOK_KEY
+//    }
+//};
+//
+//var url = baseUrl + '/available_wines';
+//var response = await requestify.get(url, options);
+//var responseObject = JSON.parse(response.body);
 //responseObject = JSON.parse(response.body)
 //responseObject[0].wine_name
 //responseObject[0].description
