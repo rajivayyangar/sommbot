@@ -22,7 +22,7 @@ var options = {
 var url = baseUrl + '/available_wines';
 var response = await requestify.get(url, options);
 var responseObject = JSON.parse(response.body);
-responseObject = JSON.parse(response.body)
+//responseObject = JSON.parse(response.body)
 //responseObject[0].wine_name
 //responseObject[0].description
 //responseObject[0].url
