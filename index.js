@@ -14,11 +14,6 @@ var book = new Fieldbook({
   book: '57f718dd56cec00300626d43'
 });
 
-//var filter_1 = {color: 'red'};
-
-//promises...: "then" means it executes after everything else on the page. a jump through time.
-//book.getSheet('available_wines', filter_1) .then((data) => {console.log(data[0]); }) .catch((error) => {console.log(error); });
-
 // Set port
 app.set('port', (process.env.PORT || 5000))
 
@@ -247,7 +242,6 @@ function sendWineRecc(sender,filter) {
         sendTextMessage(sender,wine.story);
         sendTextMessage(sender,wine.tasting_note);
         sendImageMessage(sender, wine.winemaker_image_url);
-        sendImageMessage(sender, wine.bottle_image_url);
         sendImageMessage(sender, wine.vineyard_image_url);
         sendWineCard(sender,wine)
 
