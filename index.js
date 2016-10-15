@@ -236,11 +236,8 @@ function sendWineRecc(sender,filter) {
     (data) => //promises...: "then" means it executes after everything else on the page. a jump through time.
     { 
         var wine = data[0];
-        console.log('wine_url');
-        console.log(wine.url);
         sendTextMessage(sender,wine.wine_name);
-        sendTextMessage(sender,wine.story);
-        sendTextMessage(sender,wine.tasting_note);
+        sendTextMessage(sender,wine.story+" "+wine.tasting_note);
         sendImageMessage(sender, wine.winemaker_image_url);
         sendImageMessage(sender, wine.vineyard_image_url);
         sendWineCard(sender,wine)
