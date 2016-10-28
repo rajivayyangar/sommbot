@@ -5,8 +5,7 @@ const bodyParser = require('body-parser')
 const request = require('request')
 const app = express()
 
-console.log('running')
-
+//Fieldbook Endpoint
 var Fieldbook = require('node-fieldbook');
 
 var book = new Fieldbook({
@@ -14,6 +13,9 @@ var book = new Fieldbook({
   password: 'PNbQ4lNuXCtVv1R8W-Qk',
   book: '57f718dd56cec00300626d43'
 });
+
+console.log('running')
+
 
 // Set port
 app.set('port', (process.env.PORT || 5000))
@@ -51,6 +53,43 @@ app.post('/webhook/', function (req, res) {
         if (event.message && event.message.text) {
             let text = event.message.text
             switch (text) {
+                    case 'guesswine':
+                        var qr = makeQuickReplies(["yes","no"]);
+                        //sendTextMessage(sender, "guesswine", qr)
+
+                        var tasting_note = {"acid":"low", "alcohol":"elevated", "botrytis":1, "color_concentration":"moderate", "floral":1, "high_terpenes":1, "hue":"gold", "low_terpenes":0, "oak":0, "oxidation":0, "phenolic_bitterness":1, "pommaceous_fruit":0, "pyrazines":0, "residual_sugar":"slight_rs", "stone_fruit":1, "thiols":1, "white_pepper":0}
+                        var dataString = '{"data": {"tasting_note":'+ JSON.stringify(tasting_note) + ' } }';
+                        var ps_options = {
+                            url: 'http://my-second-ps-deployment-1191682332.us-west-2.elb.amazonaws.com/query/guess-wine-from-sframe',
+                            method: 'POST',
+                            body: dataString,
+                            auth: {
+                                'user': 'key',
+                                'pass': 'e3a09ff9-d3ef-4ee4-a42e-2fc981d7912c'
+                            }
+                        };
+
+                        function callback(error, response, body) {
+                            if (!error && response.statusCode == 200) {
+                                //console.log(body);
+                                var r = JSON.parse(body);
+                                console.log(r);
+                                var guesses = r.response;
+                                sendTextMessage(sender, "1: " + guesses[1].class, null, function() {
+                                    sendTextMessage(sender, "2: " +guesses[2].class, null, function() {
+                                        sendTextMessage(sender, "3: "+ guesses[3].class, null, function() {
+                                            sendTextMessage(sender,"Was it one of these?",qr);
+                                        });
+                                    });
+                                });
+  
+                            }
+                        }
+                        request(ps_options, callback);
+
+
+                        break;
+
                     case 'Suggest a wine':
                         var qr = makeQuickReplies(["Casual","Geek"]);
                         sendTextMessage(sender, SUGGEST_CASUAL_OR_GEEK, qr)
@@ -62,40 +101,26 @@ app.post('/webhook/', function (req, res) {
                         break;
 
                     case 'Casual':
-                        //var qr = makeQuickReplies(["More","Ok"]);
-                        //sendTextMessage(sender, "<wine>/n<description>/n<buy button>", qr);
                         sendCasualWineSuggestion(sender);        
                         break;
 
                     case 'More':
-                        //var qr = makeQuickReplies(["Ok"]);
-                        //sendTextMessage(sender, "since you asked.../n<more details>", qr);
                         sendCasualWineMore(sender);
                         break;
 
                     case 'Geek':
-                        //var qr = makeQuickReplies(["Bio","Winemaking","Geo"]);
-                        //sendTextMessage(sender, "<wine>\n<description>\n<buy button>", qr);
                         sendGeekWineSuggestion(sender);
                         break;
                     case 'Bio':
-                        //var qr = makeQuickReplies(["Winemaking","Geo","Buy"]);
-                        //sendTextMessage(sender, "Fred, the winemaker, was born in...", qr);
                         sendGeekWineBio(sender);
                         break;
                     case 'Winemaking':
-                        //var qr = makeQuickReplies(["Bio","Geo","Buy"]);
-                        //sendTextMessage(sender, "12 month in neutral barrels, full malo...", qr);
                         sendGeekWinemaking(sender)
                         break;
                     case 'Geo':
-                        //var qr = makeQuickReplies(["Bio","Winemaking","Buy"]);
-                        //sendTextMessage(sender, "Steep slopes in Sonoma. Loam and gravel soil.", qr);
                         sendGeekVineyardGeo(sender);
                         break;
                     case 'Buy':
-                        //var qr = makeQuickReplies(["Ok"]);
-                        //sendTextMessage(sender, "Find this at your local retail store, or buy it from our friends over at Banquet: <BUY BUTTON>", qr);
                         sendGeekWineBuy(sender)                        
                         break;
                     case 'Ok':
@@ -107,18 +132,6 @@ app.post('/webhook/', function (req, res) {
                     var qr = makeQuickReplies(["Suggest a wine","Wine resources"]);
                     sendTextMessage(sender, START_TEXT, qr);
             }
-            /*
-            if (text === 'Suggest a wine'){
-                var filter = {color: 'red'};
-                sendWineRecc(sender,filter)
-            } else if (text === 'Wine resources') {
-                var filter = {color: 'white'};
-                sendWineRecc(sender,filter)
-            } else {
-                var qr = makeQuickReplies(["Suggest a wine","Wine resources"])
-                sendTextMessage(sender, full_text, qr)
-            }
-            */
         }
     }
     res.sendStatus(200)
@@ -175,60 +188,6 @@ function sendTernaryAttributeMessage(sender, text) {
     })
 }
 
-function sendGenericMessage(sender) {
-    let messageData = {
-        "attachment": {
-            "type": "template",
-            "payload": {
-                "template_type": "generic",
-                "elements": [{
-                    "title": "2013 Failla Keefer Ranch Pinot",
-                    "subtitle": "Sonoma Coast, CA",
-                    "image_url": "https://d2mvsg0ph94s7h.cloudfront.net/tylerhensley-1458790842-917b41241d63_medium.jpg",
-                    "buttons": [{
-                        "type": "web_url",
-                        "url": "https://shopbanquet.com/flatironsf/products/failla-keefer-ranch-pinot-noir-2013/56e7143f348e4706008d6027",
-                        "title": "Get it in 1 hr $42"
-                    }, {
-                        "type": "postback",
-                        "title": "More like this",
-                        "payload": "Payload for first element in a generic bubble",
-                    }],
-                }, {
-                    "title": "2014 La Viarte Pinot Grigio",
-                    "subtitle": "Friuli, Italy",
-                    "image_url": "https://d2mvsg0ph94s7h.cloudfront.net/jeffsidwell-1449253546-90f4ef3fc350_medium.jpg",
-                    "buttons": [{
-                        "type": "web_url",
-                        "url": "https://shopbanquet.com/flatironsf/products/la-viarte-colli-orientali-del-friuli-pinot-grigio-2014/56ea0d784ecf7206001ace5f",
-                        "title": "Get it in 1 hr $19"
-                    },{
-                        "type": "postback",
-                        "title": "More like this",
-                        "payload": "Payload for second element in a generic bubble",
-                    }],
-                }]
-            }
-        }
-    }
-    request({
-        url: 'https://graph.facebook.com/v2.6/me/messages',
-        qs: {access_token:token},
-        method: 'POST',
-        json: {
-            recipient: {id:sender},
-            message: messageData,
-        }
-    }, function(error, response, body) {
-        if (error) {
-            console.log('Error sending messages: ', error)
-        } else if (response.body.error) {
-            console.log('Error: ', response.body.error)
-        }
-    })
-}
-
-
 function makeQuickReplies(arrOfLength3){
     let quick_replies = []
 
@@ -241,50 +200,9 @@ function makeQuickReplies(arrOfLength3){
             }
         quick_replies.push(reply)
     }
-    //console.log(quick_replies)
-    
-/*
-        let quick_replies = 
-        [{
-            "content_type":"text",
-            "title":arrOfLength3[0],
-            "payload":arrOfLength3[0]
-        },{
-            "content_type":"text",
-            "title":arrOfLength3[1],
-            "payload":arrOfLength3[1]
-
-        },{
-            "content_type":"text",
-            "title":arrOfLength3[2],
-            "payload":arrOfLength3[2]
-        }]
-*/
     return quick_replies
 }
 
-
-function sendWineRecc(sender,filter) {
-    sendTextMessage(sender,"<wine card>")
-
-    /*
-    book.getSheet('available_wines', filter)
-    .then(
-    (data) => //promises...: "then" means it executes after everything else on the page. a jump through time.
-    { 
-        var wine = data[0];
-        sendTextMessage(sender,wine.wine_name);
-        sendTextMessage(sender,wine.story+" "+wine.tasting_note);
-        sendImageMessage(sender, wine.winemaker_image_url);
-        sendImageMessage(sender, wine.vineyard_image_url);
-        sendWineCard(sender,wine)
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-    */
-
-}
 
 function sendCasualWineSuggestion(sender) {
     var filter = {user_type:'casual'}
@@ -447,8 +365,6 @@ function sendGeekWineBuy(sender) {
             //console.log("inner loop Buy")
             sendWineCard(sender,wine,qr);
         });
-
-        
     })
     .catch((error) => {
       console.log(error);
