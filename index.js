@@ -7,6 +7,7 @@ const app = express()
 
 //Decides which experience vars there are:
 var experience = null;
+var tasting_note = {};
 
 console.log('running')
 
@@ -77,7 +78,7 @@ app.post('/webhook/', function (req, res) {
         if (event.message && event.message.text) {
             if(experience === 'guess_wine'){
                 console.log('guessing wine experience');
-                var tasting_note = {"acid":"low", "alcohol":"elevated", "botrytis":1, "color_concentration":"moderate", "floral":1, "high_terpenes":1, "hue":"gold", "low_terpenes":0, "oak":0, "oxidation":0, "phenolic_bitterness":1, "pommaceous_fruit":0, "pyrazines":0, "residual_sugar":"slight_rs", "stone_fruit":1, "thiols":1, "white_pepper":0}
+                tasting_note = {"acid":"low", "alcohol":"elevated", "botrytis":1, "color_concentration":"moderate", "floral":1, "high_terpenes":1, "hue":"gold", "low_terpenes":0, "oak":0, "oxidation":0, "phenolic_bitterness":1, "pommaceous_fruit":0, "pyrazines":0, "residual_sugar":"slight_rs", "stone_fruit":1, "thiols":1, "white_pepper":0}
                 var dataString = '{"data": {"tasting_note":'+ JSON.stringify(tasting_note) + ' } }';
                 var ps_options = {
                     url: 'http://my-second-ps-deployment-1191682332.us-west-2.elb.amazonaws.com/query/guess-wine-from-sframe',
