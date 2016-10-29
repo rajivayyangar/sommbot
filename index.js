@@ -93,10 +93,12 @@ app.post('/webhook/', function (req, res) {
                         //console.log(body);
                         var r = JSON.parse(body);
                         console.log(r.response);
-                        sendTextMessage(sender, "1: "+r.response[1].class,null, function() {
-                            sendTextMessage(sender, "2: "+r.response[2].class, null, function() {
-                                sendTextMessage(sender, "3: "+r.response[3].class,qr, function(){
-                                    experience = null;
+                        sendTextMessage(sender,JSON.stringify(tasting_note),null,function(){
+                            sendTextMessage(sender, "1: "+r.response[1].class,null, function() {
+                                sendTextMessage(sender, "2: "+r.response[2].class, null, function() {
+                                    sendTextMessage(sender, "3: "+r.response[3].class,qr, function(){
+                                        experience = null;
+                                    });
                                 });
                             });
                         });
