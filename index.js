@@ -34,14 +34,6 @@ app.get('/', function (req, res) {
 })
 
 // for Facebook verification
-/*
-app.get('/webhook/', function (req, res) {
-    //console.log("fbook verification a")
-    if (req.query['hub.verify_token'] === 'my_voice_is_my_password_verify_me')
-        {res.send(req.query['hub.challenge'])} 
-    res.send('Error, wrong token')
-})
-*/
 app.get('/webhook', function(req, res) {
   if (req.query['hub.mode'] === 'subscribe' &&
       req.query['hub.verify_token'] === 'my_voice_is_my_password_verify_me') {
@@ -52,16 +44,6 @@ app.get('/webhook', function(req, res) {
     res.sendStatus(403);          
   }  
 });
-
-
-/*
-app.get('/webhook/', function (req, res) {
-    if (req.query['hub.verify_token'] === 'my_voice_is_my_password_verify_me') {
-        res.send(req.query['hub.challenge'])
-    }
-    res.send('Error, wrong token')
-})
-*/
 
 
 // Spin up the server
@@ -76,9 +58,15 @@ app.post('/webhook/', function (req, res) {
         let event = req.body.entry[0].messaging[i]
         let sender = event.sender.id
         if (event.message && event.message.text) {
+            console.log("experience = " + experience);
+            console.log("tasting note = " + JSON.stringify(tasting_note));
+            let text = event.message.text;
             if(experience === 'guess_wine'){
                 console.log('guessing wine experience');
-                tasting_note = {"acid":"low", "alcohol":"elevated", "botrytis":1, "color_concentration":"moderate", "floral":1, "high_terpenes":1, "hue":"gold", "low_terpenes":0, "oak":0, "oxidation":0, "phenolic_bitterness":1, "pommaceous_fruit":0, "pyrazines":0, "residual_sugar":"slight_rs", "stone_fruit":1, "thiols":1, "white_pepper":0}
+                //tasting_note = {"acid":"low", "alcohol":"elevated", "botrytis":1, "color_concentration":"moderate", "floral":1, "high_terpenes":1, "hue":"gold", "low_terpenes":0, "oak":0, "oxidation":0, "phenolic_bitterness":1, "pommaceous_fruit":0, "pyrazines":0, "residual_sugar":"slight_rs", "stone_fruit":1, "thiols":1, "white_pepper":0}
+                tasting_note = {'acid':text};
+                console.log(" text: " + text);
+                console.log("tasting note post addition = " + JSON.stringify(tasting_note));
                 var dataString = '{"data": {"tasting_note":'+ JSON.stringify(tasting_note) + ' } }';
                 var ps_options = {
                     url: 'http://my-second-ps-deployment-1191682332.us-west-2.elb.amazonaws.com/query/guess-wine-from-sframe',
@@ -89,58 +77,33 @@ app.post('/webhook/', function (req, res) {
                         'pass': 'e3a09ff9-d3ef-4ee4-a42e-2fc981d7912c'
                     }
                 };
-                function callback(error, response, body) {
+                request(ps_options, function(error, response, body){
                     if (!error && response.statusCode == 200) {
                         //console.log(body);
                         var r = JSON.parse(body);
                         console.log(r.response);
-                        sendTextMessage(sender,JSON.stringify(tasting_note),null,function(){
-                            sendTextMessage(sender, "1: "+r.response[1].class,null, function() {
-                                sendTextMessage(sender, "2: "+r.response[2].class, null, function() {
-                                    sendTextMessage(sender, "3: "+r.response[3].class,qr, function(){
+                        sendTextMessage(sender,"Tasting note: " +JSON.stringify(tasting_note),null,function(){
+                            sendTextMessage(sender, "1: "+r.response[0].class,null, function() {
+                                sendTextMessage(sender, "2: "+r.response[1].class, null, function() {
+                                    sendTextMessage(sender, "3: "+r.response[2].class,qr, function(){
                                         experience = null;
+                                        tasting_note = {};
                                     });
                                 });
                             });
                         });
 
                     }
-                }
-                request(ps_options, callback);
+                });
             }
             else {
-                let text = event.message.text
+                console.log('switch text text: '+ text);
                 switch (text) {
                         case 'guesswine':
                             //addResponseToTastingNote(sender, "acidity", ['diminished','moderate','elevated','high']);
                             experience = 'guess_wine';
-                        /*
-                            var tasting_note = {"acid":"low", "alcohol":"elevated", "botrytis":1, "color_concentration":"moderate", "floral":1, "high_terpenes":1, "hue":"gold", "low_terpenes":0, "oak":0, "oxidation":0, "phenolic_bitterness":1, "pommaceous_fruit":0, "pyrazines":0, "residual_sugar":"slight_rs", "stone_fruit":1, "thiols":1, "white_pepper":0}
-                            var dataString = '{"data": {"tasting_note":'+ JSON.stringify(tasting_note) + ' } }';
-                            var ps_options = {
-                                url: 'http://my-second-ps-deployment-1191682332.us-west-2.elb.amazonaws.com/query/guess-wine-from-sframe',
-                                method: 'POST',
-                                body: dataString,
-                                auth: {
-                                    'user': 'key',
-                                    'pass': 'e3a09ff9-d3ef-4ee4-a42e-2fc981d7912c'
-                                }
-                            };
-                            function callback(error, response, body) {
-                                if (!error && response.statusCode == 200) {
-                                    //console.log(body);
-                                    var r = JSON.parse(body);
-                                    console.log(r.response);
-                                    sendTextMessage(sender, "1: "+r.response[1].class,null, function() {
-                                        sendTextMessage(sender, "2: "+r.response[2].class, null, function() {
-                                            sendTextMessage(sender, "3: "+r.response[3].class,qr);
-                                        });
-                                    });
-
-                                }
-                            }
-                            request(ps_options, callback);
-                            */
+                            var qr = makeQuickReplies(["diminished","moderate","elevated","high"]);
+                            sendTextMessage(sender, "What's the acid level of the wine?", qr);
                             break
                         case 'Suggest a wine':
                             var qr = makeQuickReplies(["Casual","Geek"]);
