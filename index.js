@@ -4,6 +4,11 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const request = require('request')
 const app = express()
+const users = require('./users')
+console.log(users.users)
+users.addUser('234')
+console.log(users.users)
+console.log(users.users['123'])
 
 //Decides which experience vars there are:
 var experience = null;
@@ -11,13 +16,13 @@ var tasting_note = {};
 
 console.log('running')
 
-var Fieldbook = require('node-fieldbook');
+const Fieldbook = require('./fieldbook')
 
-var book = new Fieldbook({
-  username: 'key-2',
-  password: 'PNbQ4lNuXCtVv1R8W-Qk',
-  book: '57f718dd56cec00300626d43'
-});
+const book = Fieldbook.book 
+const fieldbookHelperFunction = Fieldbook.fieldbookHelperFunction
+
+fieldbookHelperFunction()
+console.log(book)
 
 // Set port
 app.set('port', (process.env.PORT || 5000))
@@ -57,10 +62,13 @@ app.post('/webhook/', function (req, res) {
     for (let i = 0; i < messaging_events.length; i++) {
         let event = req.body.entry[0].messaging[i]
         let sender = event.sender.id
+        // const message = asd.asdf.sadf.event.message <refactor>
+        // doSomethingWithMessage(message) <refactor>
         if (event.message && event.message.text) {
             console.log("experience = " + experience);
             console.log("tasting note = " + JSON.stringify(tasting_note));
             let text = event.message.text;
+            // doSOmethingBasedonExperience(experience) <refactor>
             if(experience === 'guess_wine'){
                 console.log('guessing wine experience');
                 //tasting_note = {"acid":"low", "alcohol":"elevated", "botrytis":1, "color_concentration":"moderate", "floral":1, "high_terpenes":1, "hue":"gold", "low_terpenes":0, "oak":0, "oxidation":0, "phenolic_bitterness":1, "pommaceous_fruit":0, "pyrazines":0, "residual_sugar":"slight_rs", "stone_fruit":1, "thiols":1, "white_pepper":0}
