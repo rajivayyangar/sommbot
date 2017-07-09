@@ -5,24 +5,23 @@ const bodyParser = require('body-parser')
 const request = require('request')
 const app = express()
 const users = require('./users')
-console.log(users.users)
-users.addUser('234')
-console.log(users.users)
-console.log(users.users['123'])
+const textStrings = require('./textStrings')
+const Fieldbook = require('./fieldbook')
 
-//Decides which experience vars there are:
-var experience = null;
-var tasting_note = {};
+console.log('textStrings:')
+console.log(textStrings.START_TEXT)
+
+
+//The current user. This is determined by listening to messages and getting the sender id, then referencing users.users[sender] to get the current user object. <refactor> - figure out naming for sender_id (sender?) and users.js, users table, user object. 
+var user = null;
 
 console.log('running')
-
-const Fieldbook = require('./fieldbook')
 
 const book = Fieldbook.book 
 const fieldbookHelperFunction = Fieldbook.fieldbookHelperFunction
 
+console.log('Fieldbook helper function example:')
 fieldbookHelperFunction()
-console.log(book)
 
 // Set port
 app.set('port', (process.env.PORT || 5000))
@@ -57,25 +56,31 @@ app.listen(app.get('port'), function() {
 })
 
 app.post('/webhook/', function (req, res) {
-    console.log("post webhook");
+    console.log('post webhook');
     let messaging_events = req.body.entry[0].messaging
     for (let i = 0; i < messaging_events.length; i++) {
         let event = req.body.entry[0].messaging[i]
         let sender = event.sender.id
+        users.addUser(sender)
+        user = users.users[sender]
+
         // const message = asd.asdf.sadf.event.message <refactor>
         // doSomethingWithMessage(message) <refactor>
         if (event.message && event.message.text) {
-            console.log("experience = " + experience);
-            console.log("tasting note = " + JSON.stringify(tasting_note));
+            console.log('experience = ' + user.current_experience);
+            console.log('tasting note = ' + JSON.stringify(user.current_tasting_note));
+            console.log("inner text")
+            console.log(textStrings.START_TEXT)
+            console.log(START_TEXT)
             let text = event.message.text;
             // doSOmethingBasedonExperience(experience) <refactor>
-            if(experience === 'guess_wine'){
+            if(user.current_experience === 'guess_wine'){
                 console.log('guessing wine experience');
-                //tasting_note = {"acid":"low", "alcohol":"elevated", "botrytis":1, "color_concentration":"moderate", "floral":1, "high_terpenes":1, "hue":"gold", "low_terpenes":0, "oak":0, "oxidation":0, "phenolic_bitterness":1, "pommaceous_fruit":0, "pyrazines":0, "residual_sugar":"slight_rs", "stone_fruit":1, "thiols":1, "white_pepper":0}
-                tasting_note = {'acid':text};
-                console.log(" text: " + text);
-                console.log("tasting note post addition = " + JSON.stringify(tasting_note));
-                var dataString = '{"data": {"tasting_note":'+ JSON.stringify(tasting_note) + ' } }';
+                //user.current_tasting_note = {"acid":"low", "alcohol":"elevated", "botrytis":1, "color_concentration":"moderate", "floral":1, "high_terpenes":1, "hue":"gold", "low_terpenes":0, "oak":0, "oxidation":0, "phenolic_bitterness":1, "pommaceous_fruit":0, "pyrazines":0, "residual_sugar":"slight_rs", "stone_fruit":1, "thiols":1, "white_pepper":0}
+                user.current_tasting_note = {'acid':text};
+                console.log(' text: ' + text);
+                console.log('tasting note post addition = ' + JSON.stringify(user.current_tasting_note));
+                var dataString = '{"data": {"tasting_note":'+ JSON.stringify(user.current_tasting_note) + ' } }';
                 var ps_options = {
                     url: 'http://my-second-ps-deployment-1191682332.us-west-2.elb.amazonaws.com/query/guess-wine-from-sframe',
                     method: 'POST',
@@ -90,12 +95,12 @@ app.post('/webhook/', function (req, res) {
                         //console.log(body);
                         var r = JSON.parse(body);
                         console.log(r.response);
-                        sendTextMessage(sender,"Tasting note: " +JSON.stringify(tasting_note),null,function(){
+                        sendTextMessage(sender,"Tasting note: " +JSON.stringify(user.current_tasting_note),null,function(){
                             sendTextMessage(sender, "1: "+r.response[0].class,null, function() {
                                 sendTextMessage(sender, "2: "+r.response[1].class, null, function() {
                                     sendTextMessage(sender, "3: "+r.response[2].class,qr, function(){
-                                        experience = null;
-                                        tasting_note = {};
+                                        user.current_experience = null;
+                                        user.current_tasting_note = {};
                                     });
                                 });
                             });
@@ -109,7 +114,7 @@ app.post('/webhook/', function (req, res) {
                 switch (text) {
                         case 'guesswine':
                             //addResponseToTastingNote(sender, "acidity", ['diminished','moderate','elevated','high']);
-                            experience = 'guess_wine';
+                            user.current_experience = 'guess_wine';
                             var qr = makeQuickReplies(["diminished","moderate","elevated","high"]);
                             sendTextMessage(sender, "What's the acid level of the wine?", qr);
                             break
@@ -410,7 +415,9 @@ function sendWineCard(sender,wine, quickReplies) {
         }
     })
 }
+//What is this????
 function addResponseToTastingNote(sender, feature, value_enum  ,successCallback){
+    //user = users.users[sender]
     app.post('/webhook/', function (req, res) {
         console.log("listen for response for tasting note?");
         let messaging_events = req.body.entry[0].messaging
