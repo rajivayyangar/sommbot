@@ -8,7 +8,10 @@ var book = new Fieldbook({
 
 
 function fieldbookHelperFunction(){
-	console.log('helper function')
+	console.log('example helper function')
 }
-module.exports.book = book
-module.exports.fieldbookHelperFunction = fieldbookHelperFunction
+
+module.exports = {
+	book : book,
+	fieldbookHelperFunction : fieldbookHelperFunction
+}
